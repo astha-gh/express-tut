@@ -2,11 +2,39 @@ const express = require('express');
 const app = express();
 const {products} = require('./data');
 
-
 app.get('/' , (req , res) => {
-    res.json(products);
-});
+    res.status(200).send('<h1>Home Page</h1><a href = "/api/products">Products</a>');
+})
 
-app.listen(3000 , (req , res) => {
-    console.log("Listening to port 3000");
+app.get('/api/products' , (req , res) => {
+    //when you don't want to send all of the json, you map over it and select whatever you want to display
+    const newProduct = products.map((product)=> {
+        const {id , name ,price , image} = product;
+        return {id , name , price, image};
+    })
+    res.json(newProduct);
+})
+
+//what if we want to search for product with id 1 /api/products/1
+//use find method
+app.get('/api/products/1' , (req , res) => {
+    const singleProduct = products.find((product) => product.id === 1);
+    res.json(singleProduct);
+})
+
+app.get('/api/products/:productId' , (req , res) => {
+    const {productId} = req.params;
+    const allProducts = products.find( 
+        (product) => product.id === Number(productId)
+    )
+    if(allProducts){
+        res.json(allProducts);
+    }
+    else{
+        res.status(404).send("Product not found");
+    }
+})
+
+app.listen(3000 , ()=> {
+    console.log("Listening at port 3000");
 })
