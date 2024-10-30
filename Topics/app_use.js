@@ -1,11 +1,9 @@
 const express = require('express');
 const app = express();
 const logger = require('./logger');
-const authorise = require('./authorise');
 
 
-
-app.use([authorise , logger]);
+app.use(logger);
 
 
 app.get('/' , (req , res) => {
@@ -20,7 +18,7 @@ app.get('/api/products' , (req , res) => {
     res.send("Products");
 })
 
-app.get('/api/items', (req , res) => {
+app.get('/api/items'  , (req , res) => {
     res.send("Items");
 })
 
